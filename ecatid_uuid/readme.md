@@ -14,7 +14,9 @@ Also expects either ecatid or uuid to be supplied either as runtime arguments or
 See example below to set arguments during runtime:  
 `python ecatid_uuid.py --ecatid=107722`  
 OR  
-`python ecatid_uuid.py --uuid=fb89aea2-6531-4928-b162-506bf0c1d848`
+`python ecatid_uuid.py --uuid=fb89aea2-6531-4928-b162-506bf0c1d848`  
+OR
+`python ecatid_uuid.py --ecatid=107722 --uuid=fb89aea2-6531-4928-b162-506bf0c1d848`  
 
 ## Note  
 This is purpose built project side project; only maintained as required.
