@@ -23,14 +23,22 @@ ECAT_ADMIN_PASSWORD = os.environ.get("ECAT_ADMIN_PASSWORD") or "ecat_admin_passw
 ECAT_ENV = os.environ.get("ECAT_ENV")
 # Defaults to localhost if ECAT_ENV not specified
 ECAT_BASE_URL = "http://localhost:8080/geonetwork/srv/api"
-if ECAT_ENV:
-    ECAT_BASE_URL = f"https://{ECAT_ENV}.ga.gov.au/geonetwork/srv/api"
+if ECAT_ENV.lower() in ("dev", "test"):
+    ECAT_BASE_URL = f"https://{ECAT_ENV}.ecat.ga.gov.au/geonetwork/srv/api"
+elif ECAT_ENV.lower() == "prod":
+    ECAT_BASE_URL = f"https://ecat.ga.gov.au/geonetwork/srv/api"
 
 
 def get_auth_headers() -> Tuple[str, str]:
     """
-    Obtains eCat api authentication headers.
-    Returns tuple: XSRF-TOKEN and Set-Cookie
+    Obtains eCat API authentication headers.
+
+    This function is designed to retrieve the necessary authentication headers for interacting with the eCat API.
+    It returns a tuple containing the 'XSRF-TOKEN' and 'Set-Cookie' headers, which are typically required for maintaining
+    session state and preventing cross-site request forgery (CSRF) attacks.
+
+    Returns:
+        Tuple[str, str]: A tuple containing the 'XSRF-TOKEN' and 'Set-Cookie' headers.
     """
     headers = {"Accept": "application/json"}
     logger.info(f"Getting your token and cookies from eCat API...")
