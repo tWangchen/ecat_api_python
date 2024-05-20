@@ -2,7 +2,7 @@ import argparse
 import json
 import logging
 import os
-from typing import Tuple
+from typing import Any, Tuple
 
 import requests
 from dotenv import load_dotenv
@@ -71,10 +71,42 @@ def get_auth_headers() -> Tuple[str, str]:
     return xsrf_token, set_cookie
 
 
-def ecatid_uuid(ecatid=ECATID) -> str:
+def search(payload) -> Any:
     """
-    Converts eCatId to a UUID.
+    Performs a search operation based on the provided payload
 
+    Args:
+        payload (Any): The payload based on which the search operation is to be performed.
+
+    Returns:
+        Any: The result of the search operation in json format.
+    """
+    xsrf_token, set_cookie = get_auth_headers()
+    headers = {
+        "Accept": "application/xml",
+        "X-XSRF-TOKEN": xsrf_token,
+        "Cookie": set_cookie,
+        "Content-Type": "application/json",
+    }
+    payload = payload
+    response = requests.get(
+        f"{ECAT_BASE_URL}/search/records/_search",
+        headers=headers,
+        data=payload,
+        auth=(ECAT_USERNAME, ECAT_PASSWORD),
+    )
+    if response.status_code != 200:
+        print(response)
+        logger.exception(f"Error response status: {response.status_code}")
+        raise Exception(f"Error response status: {response.status_code}")
+
+    response_json = json.loads(response.text)
+
+    return response_json
+
+
+def ecatid_to_uuid(ecatid) -> str:
+    """
     This function takes an eCatId as input and returns a string representation of it's UUID.
 
     Args:
@@ -83,35 +115,17 @@ def ecatid_uuid(ecatid=ECATID) -> str:
     Returns:
         str: The UUID string representation of the input eCatId.
     """
-    xsrf_token, set_cookie = get_auth_headers()
-    headers = {
-        "Accept": "application/xml",
-        "X-XSRF-TOKEN": xsrf_token,
-        "Cookie": set_cookie,
-        "Content-Type": "application/json",
-    }
-    payload = json.dumps({"query": {"query_string": {"query": f"(eCatId:{ECATID})"}}})
-    response = requests.get(
-        f"{ECAT_BASE_URL}/search/records/_search",
-        headers=headers,
-        data=payload,
-        auth=(ECAT_USERNAME, ECAT_PASSWORD),
+    payload_ecatid = json.dumps(
+        {"query": {"query_string": {"query": f"(eCatId:{ecatid})"}}}
     )
-    if response.status_code != 200:
-        print(response)
-        logger.exception(f"Error response status: {response.status_code}")
-        raise Exception(f"Error response status: {response.status_code}")
-
-    response_json = json.loads(response.text)
+    response_json = search(payload=payload_ecatid)
     uuid = response_json["hits"]["hits"][0]["_id"]
 
     return uuid
 
 
-def uuid_ecatid(uuid=UUID) -> str:
+def uuid_to_ecatid(uuid) -> str:
     """
-    Converts UUID to eCatId.
-
     This function takes UUID as input and returns a string representation of it's eCatId.
 
     Args:
@@ -120,26 +134,8 @@ def uuid_ecatid(uuid=UUID) -> str:
     Returns:
         str: The eCatId string representation of the input UUID.
     """
-    xsrf_token, set_cookie = get_auth_headers()
-    headers = {
-        "Accept": "application/xml",
-        "X-XSRF-TOKEN": xsrf_token,
-        "Cookie": set_cookie,
-        "Content-Type": "application/json",
-    }
-    payload = json.dumps({"query": {"query_string": {"query": f"(uuid:{UUID})"}}})
-    response = requests.get(
-        f"{ECAT_BASE_URL}/search/records/_search",
-        headers=headers,
-        data=payload,
-        auth=(ECAT_USERNAME, ECAT_PASSWORD),
-    )
-    if response.status_code != 200:
-        print(response)
-        logger.exception(f"Error response status: {response.status_code}")
-        raise Exception(f"Error response status: {response.status_code}")
-
-    response_json = json.loads(response.text)
+    payload_uuid = json.dumps({"query": {"query_string": {"query": f"(uuid:{uuid})"}}})
+    response_json = search(payload=payload_uuid)
     ecatid = response_json["hits"]["hits"][0]["_source"]["eCatId"]
 
     return ecatid
@@ -148,19 +144,19 @@ def uuid_ecatid(uuid=UUID) -> str:
 def main() -> None:
     try:
         if ECATID and UUID:
-            uuid = ecatid_uuid(ecatid=ECATID)
+            uuid = ecatid_to_uuid(ecatid=ECATID)
             logger.info(f"Obtained UUID: {uuid} for eCatId: {ECATID}")
             print(f"Obtained UUID: {uuid} for eCatId: {ECATID}")
 
-            ecatid = uuid_ecatid(uuid=UUID)
+            ecatid = uuid_to_ecatid(uuid=UUID)
             logger.info(f"Obtained eCatId: {ecatid} for UUID: {UUID}")
             print(f"Obtained eCatId: {ecatid} for UUID: {UUID}")
         elif ECATID:
-            uuid = ecatid_uuid(ecatid=ECATID)
+            uuid = ecatid_to_uuid(ecatid=ECATID)
             logger.info(f"Obtained UUID: {uuid} for eCatId: {ECATID}")
             print(f"Obtained UUID: {uuid} for eCatId: {ECATID}")
         elif UUID:
-            ecatid = uuid_ecatid(uuid=UUID)
+            ecatid = uuid_to_ecatid(uuid=UUID)
             logger.info(f"Obtained eCatId: {ecatid} for UUID: {UUID}")
             print(f"Obtained eCatId: {ecatid} for UUID: {UUID}")
         else:
