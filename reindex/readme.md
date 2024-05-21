@@ -8,4 +8,4 @@ It expects three input values, two mandatory and one optional:
 - `ECAT_ENV`: Optional, acceptable values: `dev.ecat, dev2.ecat; test.ecat, test2.ecat; prod2.ecat, ecat`  
 
 ## Note  
-This is purpose built project side project; only maintained as required.
+This is purpose built side project; only maintained as required.
