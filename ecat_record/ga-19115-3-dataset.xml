@@ -189,7 +189,7 @@
          <mri:citation>
             <cit:CI_Citation>
                <cit:title>
-                  <gco:CharacterString>Wangchen delete me create via api from Dataset metadata template</gco:CharacterString>
+                  <gco:CharacterString>Delete me. Test record created via api from Dataset metadata template</gco:CharacterString>
                </cit:title>
                <cit:date>
                   <cit:CI_Date>
