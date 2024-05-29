@@ -97,7 +97,6 @@ def create_record() -> Tuple[str, str]:
         )
 
     response_json = json.loads(response.content)
-    # TODO: verify if this is the metadta id in the db table.
     metadata_id = next(iter(response_json["metadataInfos"]))
     uuid = response_json["metadataInfos"][metadata_id][0]["uuid"]
     logger.info(f"Created ecat record with metadata_id: {metadata_id} and UUID: {uuid}")
