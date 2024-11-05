@@ -15,4 +15,7 @@ OR
 `python ecatid_uuid.py --ecatid=107722 --uuid=fb89aea2-6531-4928-b162-506bf0c1d848 --env=test`  
 
 ## Note  
-This is purpose built side project; only maintained as required.
+This is purpose built side project; only maintained as required.  
+
+## References  
+[https://docs.geonetwork-opensource.org/4.2/api/the-geonetwork-api/](https://docs.geonetwork-opensource.org/4.2/api/the-geonetwork-api/)  
