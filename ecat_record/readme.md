@@ -10,4 +10,7 @@ It expects the following input values which can be supplied as environment varia
 
 
 ## Note  
-This is purpose built side project; only maintained as required.
+This is purpose built side project; only maintained as required.  
+
+## References  
+[https://docs.geonetwork-opensource.org/4.2/api/the-geonetwork-api/](https://docs.geonetwork-opensource.org/4.2/api/the-geonetwork-api/)  
