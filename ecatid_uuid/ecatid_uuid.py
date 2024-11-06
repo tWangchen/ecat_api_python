@@ -45,7 +45,7 @@ def search(payload) -> Any:
         logger.exception(f"Error response status: {response.status_code}")
         raise Exception(f"Error response status: {response.status_code}")
 
-    response_json = json.loads(response.text)
+    response_json = response.json()
 
     return response_json
 
