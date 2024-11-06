@@ -55,7 +55,8 @@ def ecatid_to_uuid(ecatid) -> str:
         {"query": {"query_string": {"query": f"(eCatId:{ecatid})"}}}
     )
     response_json = search(payload=payload_ecatid)
-    uuid = response_json["hits"]["hits"][0]["_id"]
+    # uuid = response_json["hits"]["hits"][0]["_id"]
+    uuid = response_json["hits"]["hits"][0]["_source"]["uuid"]
 
     return uuid
 
