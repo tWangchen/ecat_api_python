@@ -46,7 +46,7 @@ def search_ecat4(ECATID) -> None:
 
     # eCat3 response path mdStatus
     eCat4_mdstatus = ecat4_response_json["hits"]["hits"][0]["_source"]["mdStatus"]
-    print(f"\neCat4_mdstatus: {eCat4_mdstatus}")
+    print(f"\neCat4_mdStatus: {eCat4_mdstatus}")
 
     # eCat3 response path owner
     eCat4_owner = ecat4_response_json["hits"]["hits"][0]["_source"]["owner"]
